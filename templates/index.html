@@ -1,21 +1,24 @@
-<!doctype html>
+<!DOCTYPE html>
 <html>
 <head>
-  <meta charset="utf-8">
-  <title>Pics → Video</title>
-  <link rel="stylesheet" href="/static/styles.css">
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Pic2Video</title>
 </head>
 <body>
-  <main class="wrap">
     <h1>Make a Video from Your Picture</h1>
-    <form action="/render" method="post" enctype="multipart/form-data">
-      <label>Image:<br><input type="file" name="image" required></label><br>
-      <label>Description:<br><textarea name="description" placeholder="Caption (optional)"></textarea></label><br>
-      <label>Seconds:<br><input type="number" name="seconds" value="3" min="1" step="0.5"></label><br>
-      <label>Music (optional):<br><input type="file" name="music" accept="audio/*"></label><br>
-      <button type="submit">Create Video</button>
+    <form action="/render" method="POST" enctype="multipart/form-data">
+        <label>Upload Image:</label>
+        <input type="file" name="image" required><br><br>
+
+        <label>Description (optional):</label>
+        <input type="text" name="description"><br><br>
+
+        <label>Seconds per Image:</label>
+        <input type="number" name="seconds" value="3"><br><br>
+
+        <label>Music (optional):</label>
+        <input type="file" name="music"><br><br>
+
+        <button type="submit">Create Video</button>
     </form>
-  </main>
 </body>
 </html>

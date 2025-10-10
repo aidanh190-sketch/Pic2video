@@ -1,0 +1,21 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Pics → Video</title>
+  <link rel="stylesheet" href="/static/styles.css">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+</head>
+<body>
+  <main class="wrap">
+    <h1>Make a Video from Your Picture</h1>
+    <form action="/render" method="post" enctype="multipart/form-data">
+      <label>Image:<br><input type="file" name="image" required></label><br>
+      <label>Description:<br><textarea name="description" placeholder="Caption (optional)"></textarea></label><br>
+      <label>Seconds:<br><input type="number" name="seconds" value="3" min="1" step="0.5"></label><br>
+      <label>Music (optional):<br><input type="file" name="music" accept="audio/*"></label><br>
+      <button type="submit">Create Video</button>
+    </form>
+  </main>
+</body>
+</html>

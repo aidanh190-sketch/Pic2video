@@ -1,24 +1,63 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Pic2Video</title>
-</head>
-<body>
-    <h1>Make a Video from Your Picture</h1>
-    <form action="/render" method="POST" enctype="multipart/form-data">
-        <label>Upload Image:</label>
-        <input type="file" name="image" required><br><br>
+import cv2
+import os
 
-        <label>Description (optional):</label>
-        <input type="text" name="description"><br><br>
+def images_to_video(image_folder, output_path, fps=24):
+    """
+    Convert all images in a folder into a video file.
+    Supported formats: JPG, PNG, WEBP.
+    """
 
-        <label>Seconds per Image:</label>
-        <input type="number" name="seconds" value="3"><br><br>
+    # Validate folder
+    if not os.path.isdir(image_folder):
+        raise ValueError(f"Folder not found: {image_folder}")
 
-        <label>Music (optional):</label>
-        <input type="file" name="music"><br><br>
+    # Collect and sort images
+    supported_ext = (".jpg", ".jpeg", ".png", ".webp")
+    images = [f for f in os.listdir(image_folder) if f.lower().endswith(supported_ext)]
+    images.sort()
 
-        <button type="submit">Create Video</button>
-    </form>
-</body>
-</html>
+    if not images:
+        raise ValueError("No valid image files found in the folder.")
+
+    # Read first image for resolution
+    first_image_path = os.path.join(image_folder, images[0])
+    first_frame = cv2.imread(first_image_path)
+
+    if first_frame is None:
+        raise RuntimeError(f"Could not read first image: {first_image_path}")
+
+    height, width, _ = first_frame.shape
+
+    # Create video writer
+    fourcc = cv2.VideoWriter_fourcc(*"mp4v")
+    video = cv2.VideoWriter(output_path, fourcc, fps, (width, height))
+
+    # Build video frame-by-frame
+    for img_name in images:
+        path = os.path.join(image_folder, img_name)
+        frame = cv2.imread(path)
+
+        if frame is None:
+            print(f"Warning: Skipping unreadable file: {path}")
+            continue
+
+        # Resize if shape mismatch
+        if frame.shape[:2] != (height, width):
+            frame = cv2.resize(frame, (width, height))
+
+        video.write(frame)
+
+    video.release()
+    print(f"Video created successfully: {output_path}")
+
+
+# Example usage
+if __name__ == "__main__":
+    try:
+        images_to_video(
+            image_folder="promptchan_outputs",  # folder of downloaded PromptChan images
+            output_path="promptchan_video.mp4",
+            fps=24
+        )
+    except Exception as e:
+        print(f"Error: {e}")
